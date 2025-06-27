@@ -3,6 +3,8 @@ from flask_pymongo import PyMongo
 from flask_cors import CORS
 
 from app.routes.admin_controller import admin_bp
+from app.routes.buyer_controller import buyer_bp
+from app.routes.chat_controller import chat_bp
 from app.routes.seller_controller import seller_bp
 from app.routes.super_admin_controller import superAdmin_bp
 
@@ -23,6 +25,8 @@ def create_app(testing=False):
     app.register_blueprint(seller_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(superAdmin_bp)
+    app.register_blueprint(buyer_bp)
+    app.register_blueprint(chat_bp)
 
     CORS(app)
     return app
