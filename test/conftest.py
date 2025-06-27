@@ -1,19 +1,16 @@
 import pytest
-from flask import Flask, current_app
-from flask_pymongo import pymongo, PyMongo
-from app import create_app
+from flask import current_app
+from app import create_app, mongo
 
 @pytest.fixture
 def test_client():
     app = create_app(testing=True)
-    app.config["MONGO_URI"] = "mongodb://localhost:27017/test"
-    mongo = PyMongo(app)
     app.mongo = mongo
 
-    with app.test_client() as test_client:
+    with app.test_client() as client:
         with app.app_context():
-            mongo.db.user.delete_many({})
-            yield test_client
+            mongo.cx.drop_database("ecommerce_test")
+        yield client
 
 
 @pytest.fixture(autouse=True)
