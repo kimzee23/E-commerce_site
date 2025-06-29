@@ -1,4 +1,8 @@
 from flask import Blueprint, request, jsonify, current_app
+from pydantic import ValidationError
+
+from app.dtos.request.user_request import UserRegisterRequest
+from app.enums.user_role import UserRole
 from app.services.userService import UserService
 from app.utils.validator import validation_for_email, validation_for_phoneNumber
 
@@ -8,28 +12,29 @@ customer_bp = Blueprint("customer_bp", __name__, url_prefix="/api/customers")
 def register_customer():
     data = request.get_json()
     try:
-        if not validation_for_email(data["email"]):
-            print("Email failed validation")
+
+        validated_data = UserRegisterRequest(**data)
+
+        if not validation_for_email(validated_data.email):
             return jsonify({"error": "Invalid email format"}), 400
 
-        if not validation_for_phoneNumber(data["phone"]):
-            print("Phone failed validation")
-            return jsonify({"message": "Invalid phone number format"}), 400
+        if not validation_for_phoneNumber(validated_data.phone):
+            return jsonify({"error": "Invalid phone number format"}), 400
 
         customer_id = UserService.register(
-            name=data["name"],
-            email=data["email"],
-            password=data["password"],
-            role="customer",
-            phone=data.get("phone")
+            name=validated_data.name,
+            email=validated_data.email,
+            password=validated_data.password,
+            role=UserRole.CUSTOMER.value,
+            phone=validated_data.phone
         )
         return jsonify({"message": "Customer registered", "customer_id": customer_id}), 201
-    except ValueError as e:
-        print("Registration Error:", str(e))
-        return jsonify({"error": str(e)}), 409
 
+    except ValidationError as ve:
+        return jsonify({"error": "Validation error", "details": ve.errors()}), 422
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 409
     except Exception as e:
-        print("Unexpected Error:", str(e))
         return jsonify({"error": "Registration failed", "details": str(e)}), 500
 
 

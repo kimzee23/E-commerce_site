@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from pydantic import ValidationError
 
-from app.dtos.request.product_request import ProductRequest
+from app.dtos.request.product_request import CreateProductRequest
 from app.models.product_model import Product
 from app.services.productService import ProductService
 
@@ -11,7 +11,7 @@ product_bp = Blueprint('product_bp', __name__, url_prefix='/api/products')
 def create_product():
     try:
         body = request.get_json()
-        product_data = ProductRequest(**body)
+        product_data = CreateProductRequest(**body)
         if not product_data.images or len(product_data.images) == 0:
             return jsonify({"error": "At least one image is required."}), 400
         product_id = ProductService.create_product(product_data)
@@ -55,6 +55,7 @@ def get_product_by_name():
         return jsonify({"error":"Failed to fetch products by name", "details":str(error)}), 500
 
 @product_bp.route('/<product_id>', methods=['DELETE'])
+
 def delete_product(product_id):
     data = request.get_json()
     seller_id = data.get('seller_id')
@@ -68,6 +69,7 @@ def delete_product(product_id):
         return jsonify({"message":"product deleted successfully"}), 200
     except Exception as error:
         return jsonify({"error":"Failed to fetch product", "details":str(error)}), 500
+
 @product_bp.route('/<product_id>/update', methods=['PUT'])
 def update_product(product_id):
     try:
