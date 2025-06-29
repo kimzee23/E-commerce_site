@@ -6,7 +6,8 @@ def test_if_admin_register_successfully(test_client):
         "name": "gazar",
         "email": "gazar@gmail.com",
         "password": "password",
-        "phone" : "08125016091"
+        "phone" : "08125016091",
+        "role": "admin"
     }
     response = test_client.post("/api/admins/register", data=json.dumps(payload), content_type='application/json')
     assert response.status_code == 201
@@ -18,7 +19,8 @@ def test_if_admin_login_successfully(test_client):
         "name": "gazar",
         "email": "gazar@gmail.com",
         "password": "password",
-        "phone" : "08125016091"
+        "phone" : "08125016091",
+        "role": "admin"
     }
     response = test_client.post("/api/admins/register", data=json.dumps(payload), content_type='application/json')
     assert response.status_code == 201
@@ -37,7 +39,9 @@ def test_admin_register_with_invalid_email(test_client):
         "name": "gazar",
         "email": "gazar@@mail.com",
         "password": "password",
-        "phone": "081125016091"
+        "phone": "081125016091",
+        "role": "admin"
+
     }
     response = test_client.post("/api/admins/register", data=json.dumps(payload), content_type="application/json")
     assert response.status_code == 400
@@ -48,7 +52,8 @@ def test_admin_register_with_invalid_phone(test_client):
         "name": "gazar",
         "email": "gazar@gmail.com",
         "password": "password",
-        "phone": "123456"
+        "phone": "123456",
+        "role": "admin"
     }
     response = test_client.post("/api/admins/register", data=json.dumps(payload), content_type="application/json")
     assert response.status_code == 400

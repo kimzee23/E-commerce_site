@@ -9,11 +9,11 @@ class ProductService:
             raise ValueError("Product image is required.")
 
         product = Product(
-            name=name,
-            description=description,
+            name=name.strip(),
+            description=description.strip(),
             price=price,
             stock=stock,
-            category=category,
+            category=category.strip(),
             images_url=images_url,
             seller_id=seller_id
         )

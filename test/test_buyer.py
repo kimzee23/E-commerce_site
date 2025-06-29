@@ -5,7 +5,8 @@ def test_buyer_register_success(test_client):
         "name": "John",
         "email": "john@gmail.com",
         "password": "password",
-        "phone": "08112223344"
+        "phone": "08112223344",
+        "role": "buyer"
     }
     response = test_client.post(
         "/api/buyers/register",
@@ -21,7 +22,8 @@ def test_buyer_register_duplicate_email(test_client):
         "name": "John",
         "email": "john@gmail.com",
         "password": "password",
-        "phone": "08112223344"
+        "phone": "08112223344",
+        "role": "buyer"
     }
     test_client.post("/api/buyers/register", data=json.dumps(payload), content_type='application/json')
     response = test_client.post("/api/buyers/register", data=json.dumps(payload), content_type='application/json')
@@ -32,9 +34,11 @@ def test_buyer_login_success(test_client):
         "name": "suliha",
         "email": "suliha@gmail.com",
         "password": "mypassword",
-        "phone": "08115556677"
+        "phone": "08115556677",
+        "role": "buyer"
     }
-    test_client.post("/api/buyers/register", data=json.dumps(payload), content_type='application/json')
+    response=test_client.post("/api/buyers/register", data=json.dumps(payload), content_type='application/json')
+    print("Response:", response.status_code,response.data)
     login_payload = {
         "email": "suliha@gmail.com",
         "password": "mypassword"

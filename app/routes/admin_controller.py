@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+
+from app.enums.user_role import UserRole
 from app.services.userService import UserService
 from email_validator import EmailNotValidError
 
@@ -25,7 +27,7 @@ def register_admin():
             email=data['email'],
             password=data['password'],
             phone=data['phone'],
-            role="admin"
+            role=UserRole.ADMIN.value,
         )
         return jsonify({"message": "Admin Registration Successful", "admin_id": admin_id}), 201
 
