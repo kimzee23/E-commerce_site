@@ -1,43 +1,59 @@
-from datetime import datetime
+import traceback
+from datetime import datetime, timezone
+
 from bson import ObjectId
 from flask import current_app
+from pydantic import BaseModel
 
 
 class Product:
-    def __init__(self, name, description, price, category, stock, seller_id, images_url=None,is_active=True, created_at=None, updated_at=None):
+    def __init__(self, name, description, price, category, stock_quantity, seller_id, images_url=None, is_active=True, created_at=None, updated_at=None):
         self.name = name
         self.description = description
         self.price = price
         self.category = category
-        self.stock = stock
+        self.stock_quantity = stock_quantity
         self.seller_id = ObjectId(seller_id)
-        self.images_url = images
+        self.images_url = images_url or []
         self.is_active = is_active
-        self.created_at = created_at or datetime.now()
-        self.updated_at = updated_at or datetime.now()
+        self.created_at = created_at or datetime.now(timezone.utc)
+        self.updated_at = updated_at or datetime.now(timezone.utc)
+
     def to_dict(self):
         return {
-            'name': self.name,
-            'description': self.description,
-            'price': self.price,
-            'category': self.category,
-            'stock': self.stock,
-            'seller_id': self.seller_id,
-            'images_url': self.images_url,
-            'is_active': self.is_active,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
+            "name": self.name,
+            "description": self.description,
+            "price": self.price,
+            "category": self.category,
+            "stock_quantity": self.stock_quantity,
+            "seller_id": self.seller_id,
+            "images_url": [str(url) for url in self.images_url],
+            "is_active": self.is_active,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
         }
+
     @staticmethod
     def from_dict(data):
+
+
+        if isinstance(data, BaseModel):
+            data = data.model_dump()
+
+        if not isinstance(data, dict):
+            raise TypeError(f"Expected dict, got {type(data)}")
+
+        images_raw = data.get('images_url') or data.get('images') or []
+        images_url = [str(url) for url in images_raw]
+
         return Product(
-            name=data.get('name'),
-            description=data.get('description'),
-            price=data.get('price'),
-            category=data.get('category'),
-            stock=data.get('stock'),
-            seller_id=data.get('seller_id'),
-            images_url=data.get('images_url'),
+            name=data['name'],
+            description=data['description'],
+            price=data['price'],
+            category=data['category'],
+            stock_quantity=data['stock_quantity'],
+            seller_id=data['seller_id'],
+            images_url=images_url,
             is_active=data.get('is_active', True),
             created_at=data.get('created_at'),
             updated_at=data.get('updated_at')

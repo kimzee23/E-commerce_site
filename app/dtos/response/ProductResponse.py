@@ -1,25 +1,24 @@
-from datetime import datetime
-from typing import List
-from pydantic import BaseModel,HttpUrl
 from pydantic.v1 import root_validator
+from typing import List, Optional
+from datetime import datetime
+from pydantic import BaseModel, HttpUrl, model_validator
 
 
 class ProductResponse(BaseModel):
     id: str
     name: str
-    price: float
     description: str
-    stock_quantity: int
+    price: float
     category: str
-    images: List[HttpUrl]
-    seller_id : str
-    status: str
-    created_at: datetime
-    updated_at: datetime | None = None
+    stock_quantity: int
+    seller_id: str
+    images_url: List[HttpUrl]
+    is_active: bool
+    created_at: str
+    updated_at: str
 
-    @root_validator
-    def check_image_is_not_empty(cls, values):
-        image = values['images']
-        if not image or len(image) < 1 :
-            raise ValueError('Image must have at least one image')
-        return values
+    @model_validator(mode='after')
+    def validate_images(self):
+        if not self.images or len(self.images) < 1:
+            raise ValueError("At least one image URL is required.")
+        return self

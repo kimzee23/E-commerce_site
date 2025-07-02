@@ -42,7 +42,6 @@ def register_admin():
 def login_admin():
     data = request.get_json()
     try:
-
         try:
             validation_for_email(data["email"])
         except EmailNotValidError as e:
@@ -56,6 +55,9 @@ def login_admin():
         return jsonify({"message": "Admin Login Successful", "admin_id": admin_id}), 201
 
     except ValueError as error:
-        return jsonify({"message": str(error)}), 409
+        # For login failures, use 401 instead of 409
+        return jsonify({"message": str(error)}), 401
+
     except Exception as error:
         return jsonify({"message": "Unexpected error", "details": str(error)}), 500
+

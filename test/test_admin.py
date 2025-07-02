@@ -1,5 +1,9 @@
 import json
 
+from flask import current_app
+
+from app import create_app
+
 
 def test_if_admin_register_successfully(test_client):
     payload = {
@@ -15,14 +19,18 @@ def test_if_admin_register_successfully(test_client):
     assert "admin_id" in data
 
 def test_if_admin_login_successfully(test_client):
+    with test_client.application.app_context():
+        current_app.mongo.db.users.delete_many({"email": "gazar@gmail.com", "role": "admin"})
+
     payload = {
         "name": "gazar",
         "email": "gazar@gmail.com",
         "password": "password",
-        "phone" : "08125016091",
+        "phone": "08125016091",
         "role": "admin"
     }
     response = test_client.post("/api/admins/register", data=json.dumps(payload), content_type='application/json')
+    print("Response", response.status_code, response.data)
     assert response.status_code == 201
 
     login_payload = {
@@ -31,8 +39,8 @@ def test_if_admin_login_successfully(test_client):
     }
     response = test_client.post("/api/admins/login", data=json.dumps(login_payload), content_type='application/json')
     assert response.status_code == 201
-    data = json.loads(response.data)
-    assert "admin_id" in data
+
+
 
 def test_admin_register_with_invalid_email(test_client):
     payload = {

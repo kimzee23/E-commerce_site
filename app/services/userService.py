@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.enums.user_role import UserRole
 from app.models.user_model import User
-# from argon2
+
 
 class UserService:
     @staticmethod
@@ -37,12 +37,13 @@ class UserService:
     def login(email, password, role):
         email = email.strip().lower()
         password = password.strip()
-        print("LOGIN INPUTS:", email, password, role)
+
         if not email or not password:
             raise ValueError("Email and password cannot be empty.")
+
         mongo = current_app.mongo
         user = mongo.db.users.find_one({'email': email, 'role': role})
-        print("FOUND USER:", user)
+
         if not user or not check_password_hash(user['password'], password):
             raise ValueError("Invalid credentials")
 
