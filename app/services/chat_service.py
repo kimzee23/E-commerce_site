@@ -1,7 +1,8 @@
 from flask import current_app
 from bson import ObjectId
 from app.models.chat_model import Chat
-from datetime import datetime
+from datetime import datetime, timezone
+
 
 class ChatService:
 
@@ -32,7 +33,7 @@ class ChatService:
             "sender_id": ObjectId(buyer_id),
             "message": message,
             "price_offer": price_offer,
-            "timestamp": datetime.utcnow()
+            "timestamp": datetime.now(timezone.utc)
         }
 
         result = db.chats.update_one(
@@ -83,12 +84,12 @@ class ChatService:
             "created_at": chat["created_at"].isoformat(),
             "messages": [
                 {
-                    "sender_id": str(m["sender_id"]),
-                    "message": m["message"],
-                    "price_offer": m.get("price_offer"),
-                    "timestamp": m["timestamp"].isoformat()
+                    "sender_id": str(messaging["sender_id"]),
+                    "message": messaging["message"],
+                    "price_offer": messaging.get("price_offer"),
+                    "timestamp": messaging["timestamp"].isoformat()
                 }
-                for m in chat.get("messages", [])
+                for messaging in chat.get("messages", [])
             ]
         }
 

@@ -1,18 +1,20 @@
-from pydantic import BaseModel, Field, HttpUrl, root_validator
-from typing import List
+from pydantic import BaseModel, Field, HttpUrl, model_validator
+from typing import List, Optional
 
 class CreateProductRequest(BaseModel):
-    name: str = Field(..., min_length=2, max_length=100)
-    description: str = Field(..., min_length=10)
-    price: float = Field(..., gt=0)
+    name: str
+    description: str
+    price: float
+    stock_quantity: int
     category: str
-    stock_quantity: int = Field(..., ge=0)
-    images: List[HttpUrl]
     seller_id: str
+    images: List[HttpUrl] or List[str]
 
-    @root_validator
-    def validate_images(cls, values):
-        images = values.get("images")
-        if not images or len(images) < 1:
+    @model_validator(mode='after')
+    def validate_images(self):
+        if not self.images or len(self.images) < 1:
             raise ValueError("At least one image URL is required.")
-        return values
+        return self
+
+
+

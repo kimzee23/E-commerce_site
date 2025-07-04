@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from bson import ObjectId
 
 class Chat:
@@ -7,7 +7,7 @@ class Chat:
         self.seller_id = ObjectId(seller_id)
         self.product_id = ObjectId(product_id)
         self.messages = messages if messages else []
-        self.created_at = datetime.utcnow()
+        self.created_at = datetime.now(timezone.utc)
 
     def to_dict(self):
         return {

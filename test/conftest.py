@@ -1,12 +1,16 @@
+import sys
+import os
 import pytest
 from flask import current_app
-from app import create_app, mongo
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from app import create_app
 
 @pytest.fixture
 def test_client():
     app = create_app(testing=True)
-    app.mongo = mongo
-
+    mongo = app.mongo  # Get mongo from app context
     with app.test_client() as client:
         with app.app_context():
             mongo.cx.drop_database("ecommerce_test")

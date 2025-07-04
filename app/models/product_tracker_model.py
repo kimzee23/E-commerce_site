@@ -5,7 +5,7 @@ class ProductTracker:
     def __init__(self, product_id, user_id=None, event_type="view"):
         self.product_id = ObjectId(product_id)
         self.user_id = ObjectId(user_id) if user_id else None
-        self.event_type = event_type  # view or purchase
+        self.event_type = event_type
         self.timestamp = datetime.utcnow()
 
     def to_dict(self):
