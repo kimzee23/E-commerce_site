@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from pydantic import ValidationError
 from app.dtos.request.product_request import CreateProductRequest
 from app.dtos.response.ProductResponse import ProductResponse
+from app.models.product_model import Product
 from app.services.productService import ProductService
 
 product_bp = Blueprint("product_bp", __name__, url_prefix="/api/products")
@@ -23,15 +24,16 @@ def create_product():
         return jsonify({"error": "Validation error", "details": ve.errors()}), 422
     except Exception as e:
         import traceback
-        print("ERROR:", traceback.format_exc())  # <== log real error to debug
+        print("ERROR:", traceback.format_exc())
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
 
 @product_bp.route("/", methods=["GET"])
 def get_all_products():
     try:
         products = ProductService.get_all_products()
-        response = [ProductResponse.from_model(p).dict() for p in products]
+        response = [ProductResponse.from_model(p).model_dump(mode="json") for p in products]
         return jsonify(response), 200
+
     except Exception as e:
         return jsonify({"error": "Failed to fetch products", "details": str(e)}), 500
 
@@ -43,8 +45,9 @@ def get_product_by_id(product_id):
         if not product:
             return jsonify({"error": "Product not found"}), 404
 
-        response = ProductResponse.from_model(product)
-        return jsonify(response.dict()), 200
+        response = ProductResponse.from_model(product).model_dump(mode="json")
+        return jsonify(response), 200
+
     except Exception as e:
         return jsonify({"error": "Failed to fetch product", "details": str(e)}), 500
 
@@ -54,14 +57,13 @@ def get_product_by_name():
     name = request.args.get("name")
     if not name:
         return jsonify({"error": "Product name is required"}), 400
-
     try:
         product = ProductService.get_product_by_name(name)
         if not product:
             return jsonify({"error": "Product not found"}), 404
 
         response = ProductResponse.from_model(product)
-        return jsonify(response.dict()), 200
+        return jsonify(response.model_dump(mode="json")), 200
     except Exception as e:
         return jsonify({"error": "Failed to fetch product by name", "details": str(e)}), 500
 

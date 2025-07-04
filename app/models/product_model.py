@@ -7,7 +7,8 @@ from pydantic import BaseModel
 
 
 class Product:
-    def __init__(self, name, description, price, category, stock_quantity, seller_id, images_url=None, is_active=True, created_at=None, updated_at=None):
+    def __init__(self, name, description, price, category, stock_quantity, seller_id,images_url=None, is_active=True, created_at=None, updated_at=None, id=None):
+        self.id = id or ObjectId()
         self.name = name
         self.description = description
         self.price = price
@@ -21,6 +22,7 @@ class Product:
 
     def to_dict(self):
         return {
+            "_id": self.id,
             "name": self.name,
             "description": self.description,
             "price": self.price,
@@ -35,18 +37,15 @@ class Product:
 
     @staticmethod
     def from_dict(data):
-
-
         if isinstance(data, BaseModel):
             data = data.model_dump()
-
         if not isinstance(data, dict):
             raise TypeError(f"Expected dict, got {type(data)}")
-
         images_raw = data.get('images_url') or data.get('images') or []
         images_url = [str(url) for url in images_raw]
 
         return Product(
+            id=data.get('_id'),
             name=data['name'],
             description=data['description'],
             price=data['price'],

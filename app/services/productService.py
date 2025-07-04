@@ -16,9 +16,9 @@ class ProductService:
 
     @staticmethod
     def get_all_products():
-        db = current_app.mongo.db
-        products = db.products.find()
-        return [Product.from_dict(p).__dict__ for p in products]
+        mongo = current_app.mongo
+        raw_products = list(mongo.db.products.find())
+        return [Product.from_dict(p) for p in raw_products]
 
     @staticmethod
     def get_product_by_id(product_id):
@@ -39,7 +39,7 @@ class ProductService:
         return Product.from_dict(product) if product else None
 
     @staticmethod
-    def delete_product(product_id, seller_id):
+    def delete_product(product_id: str, seller_id: str) -> bool:
         db = current_app.mongo.db
         result = db.products.delete_one({
             "_id": ObjectId(product_id),
