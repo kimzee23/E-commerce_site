@@ -10,7 +10,7 @@ from app import create_app
 @pytest.fixture
 def test_client():
     app = create_app(testing=True)
-    mongo = app.mongo  # Get mongo from app context
+    mongo = app.mongo
     with app.test_client() as client:
         with app.app_context():
             mongo.cx.drop_database("ecommerce_test")
