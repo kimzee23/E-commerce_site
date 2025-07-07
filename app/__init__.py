@@ -2,17 +2,19 @@ from flask import Flask
 from flask_pymongo import PyMongo
 from flask_cors import CORS
 
+from app.routes import main_routes
 from app.routes.admin_controller import admin_bp
 from app.routes.buyer_controller import buyer_bp
 from app.routes.chat_controller import chat_bp
 from app.routes.product_controller import product_bp
 from app.routes.seller_controller import seller_bp
 from app.routes.super_admin_controller import superAdmin_bp
+from app.routes.main_routes import main_bp
 
 mongo = PyMongo()
 
 def create_app(testing=False):
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder="templates", static_folder="static")
     app.config["MONGO_URI"] = "mongodb://localhost:27017/ecommerce_test" if testing else "mongodb://localhost:27017/ecommerce"
 
 
@@ -21,7 +23,9 @@ def create_app(testing=False):
     mongo.init_app(app)
     app.mongo = mongo
 
+
     from app.routes.customer_controller import customer_bp
+    from app.routes.main_routes import main_bp
     app.register_blueprint(customer_bp)
     app.register_blueprint(seller_bp)
     app.register_blueprint(admin_bp)
@@ -29,6 +33,7 @@ def create_app(testing=False):
     app.register_blueprint(buyer_bp)
     app.register_blueprint(product_bp)
     app.register_blueprint(chat_bp)
+    app.register_blueprint(main_bp)
 
     CORS(app)
     return app
