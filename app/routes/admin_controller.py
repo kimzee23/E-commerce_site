@@ -1,5 +1,7 @@
+from bson import ObjectId
 from flask import Blueprint, request, jsonify
 
+from app import mongo
 from app.enums.user_role import UserRole
 from app.services.userService import UserService
 from email_validator import EmailNotValidError
@@ -60,4 +62,35 @@ def login_admin():
 
     except Exception as error:
         return jsonify({"message": "Unexpected error", "details": str(error)}), 500
+
+@admin_bp.route('/suspend-seller/<seller_id>', methods=['PUT'])
+def suspend_seller(seller_id):
+    try:
+        result = mongo.db.users.update_one(
+            {"_id": ObjectId(seller_id), "role": UserRole.SELLER.value},
+            {"$set": {"is_active": False}}
+        )
+        if result.matched_count == 0:
+            return jsonify({"error": "Seller not found"}), 404
+
+        return jsonify({"message": "Seller suspended successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": "Failed to suspend seller", "details": str(e)}), 500
+
+@admin_bp.route('/delete-seller/<seller_id>', methods=['DELETE'])
+def delete_seller(seller_id):
+    try:
+        result = mongo.db.users.delete_one({
+            "_id": ObjectId(seller_id),
+            "role": UserRole.SELLER.value
+        })
+
+        if result.deleted_count == 0:
+            return jsonify({"error": "Seller not found or already deleted"}), 404
+
+        return jsonify({"message": "Seller deleted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": "Failed to delete seller", "details": str(e)}), 500
 

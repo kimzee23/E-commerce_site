@@ -10,6 +10,7 @@ def test_send_chat_message_success(test_client):
         "price_offer": 5000
     }
     response = test_client.post("/api/chat/send", data=json.dumps(payload), content_type='application/json')
+    print("Response JSON", response.get_json())
     assert response.status_code == 201
 
 

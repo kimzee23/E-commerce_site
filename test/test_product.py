@@ -131,6 +131,7 @@ def test_get_product_by_name_method_is_working(test_client, test_product_payload
     assert get_response.status_code == 200
     data = get_response.get_json()
     assert data["name"] == product_name
+
 def test_delete_product_is_working(test_client, test_product_payload):
     Create_response = test_client.post(
         '/api/products/create',
@@ -149,8 +150,6 @@ def test_delete_product_is_working(test_client, test_product_payload):
     print("DELETE RESPONSE:", delete_response.status_code, delete_response.data.decode())
     assert delete_response.status_code == 200
     assert delete_response.get_json()["message"] == "Product deleted successfully"
-
-    # Step 3: Verify deletion
     get_response = test_client.get(f'/api/products/{product_id}')
     print("GET AFTER DELETE:", get_response.status_code, get_response.data.decode())
     assert get_response.status_code == 404
