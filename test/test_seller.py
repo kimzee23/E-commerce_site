@@ -1,20 +1,32 @@
 import json
+from unittest.mock import patch
+
+
 
 def test_seller_register_is_successful(test_client):
     payload = {
-        'name': "amidat bread",
-        'email': "amidat@gmail.com",
-        'password': "password",
+        "name": "amidat bread",
+        "email": "amidat@gmail.com",
+        "password": "password",
         "phone": "08123456781",
         "role": "seller"
     }
-    response = test_client.post(
-        '/api/sellers/register',
-        data=json.dumps(payload),
-        content_type='application/json'
-    )
+
+    with patch("app.routes.seller_controller.mail.send"):
+        response = test_client.post(
+            "/api/sellers/register",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
 
     assert response.status_code == 201
+    data = response.get_json()
+    assert data["message"] == "Seller registration successful"
+    assert "seller_id" in data
+
+    assert response.status_code == 201
+    assert b"Seller registration successful" in response.data
+
 
 def test_if_seller_login_successfully(test_client):
     payload = {
@@ -24,33 +36,53 @@ def test_if_seller_login_successfully(test_client):
         "phone": "08123456781",
         "role": "seller"
     }
-    register_response = test_client.post(
-        "/api/sellers/register", data=json.dumps(payload), content_type='application/json')
-    assert register_response.status_code == 201
 
-    login_payload = {
-        "email": "amidat@gmail.com",
-        "password": "password",
-    }
-    response = test_client.post("/api/sellers/login", data=json.dumps(login_payload), content_type='application/json')
-    assert response.status_code == 200
-    data = json.loads(response.data)
-    assert  "seller_id" in data
+
+    with patch("app.routes.seller_controller.mail.send") as mock_send:
+        register_response = test_client.post(
+            "/api/sellers/register",
+            data=json.dumps(payload),
+            content_type='application/json'
+        )
+
+        assert register_response.status_code == 201
+        assert b"Seller registration successful" in register_response.data
+
+    login_response = test_client.post(
+        "/api/sellers/login",
+        data=json.dumps({
+            "email": "amidat@gmail.com",
+            "password": "password"
+        }),
+        content_type='application/json'
+    )
+
+    assert login_response.status_code == 200
+    assert b"Login successful" in login_response.data
 
 def test_for_duplicate_email(test_client):
     payload = {
-        "name": "jerry",
+        "name": "Amidat",
         "email": "amidat@gmail.com",
-        "password": "password",
-        "phone": "08112345672",
-        "role" : "seller"
+        "password": "password123",
+        "phone": "08123456789",
+        "role": "seller"
     }
-    test_client.post("/api/sellers/register", data=json.dumps(payload), content_type='application/json')
-    response = test_client.post("/api/sellers/register", data=json.dumps(payload), content_type='application/json')
-    print("Response: ", response.status_code,response.data)
+
+    with patch("app.routes.seller_controller.mail.send"):
+        test_client.post(
+            "/api/sellers/register",
+            data=json.dumps(payload),
+            content_type='application/json'
+        )
+        response = test_client.post(
+            "/api/sellers/register",
+            data=json.dumps(payload),
+            content_type='application/json'
+        )
+
     assert response.status_code == 409
     assert b"Seller email already registered" in response.data
-
 
 
 def test_seller_register_with_invalid_email(test_client):

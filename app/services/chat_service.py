@@ -1,5 +1,5 @@
-from flask import current_app
 from bson import ObjectId
+from app import mongo
 from app.models.chat_model import Chat
 from datetime import datetime, timezone
 
@@ -9,13 +9,12 @@ class ChatService:
     @staticmethod
     def start_chat(buyer_id, seller_id, product_id):
         chat = Chat(buyer_id=buyer_id, seller_id=seller_id, product_id=product_id)
-        db = current_app.mongo.db
-        result = db.chats.insert_one(chat.to_dict())
+        result = mongo.db.chats.insert_one(chat.to_dict())
         return str(result.inserted_id)
 
     @staticmethod
     def send_message(product_id, buyer_id, seller_id, message, price_offer):
-        db = current_app.mongo.db
+        db = mongo.db
 
         chat = db.chats.find_one({
             "product_id": ObjectId(product_id),
@@ -24,7 +23,6 @@ class ChatService:
         })
 
         if not chat:
-
             chat_id = ChatService.start_chat(buyer_id, seller_id, product_id)
         else:
             chat_id = chat["_id"]
@@ -48,7 +46,7 @@ class ChatService:
 
     @staticmethod
     def get_chat(chat_id):
-        db = current_app.mongo.db
+        db = mongo.db
         chat = db.chats.find_one({"_id": ObjectId(chat_id)})
         if not chat:
             raise ValueError("Chat not found")
@@ -56,7 +54,7 @@ class ChatService:
 
     @staticmethod
     def get_chats_for_user(user_id):
-        db = current_app.mongo.db
+        db = mongo.db
         chats = db.chats.find({
             "$or": [
                 {"buyer_id": ObjectId(user_id)},
@@ -67,7 +65,7 @@ class ChatService:
 
     @staticmethod
     def get_conversation(product_id, buyer_id):
-        db = current_app.mongo.db
+        db = mongo.db
         chat = db.chats.find_one({
             "product_id": ObjectId(product_id),
             "buyer_id": ObjectId(buyer_id)
@@ -84,14 +82,13 @@ class ChatService:
             "created_at": chat["created_at"].isoformat(),
             "messages": [
                 {
-                    "sender_id": str(messaging["sender_id"]),
-                    "message": messaging["message"],
-                    "price_offer": messaging.get("price_offer"),
-                    "timestamp": messaging["timestamp"].isoformat()
+                    "sender_id": str(m["sender_id"]),
+                    "message": m["message"],
+                    "price_offer": m.get("price_offer"),
+                    "timestamp": m["timestamp"].isoformat()
                 }
-                for messaging in chat.get("messages", [])
+                for m in chat.get("messages", [])
             ]
         }
 
         return conversation
-

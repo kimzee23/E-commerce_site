@@ -13,9 +13,9 @@ class UserRegisterRequest(BaseModel):
 
     @validator("role")
     def validate_role(cls, role_value):
-        allowed_roles = {"customer", "seller", "admin", "super_admin", "buyer"}
+        allowed_roles = {"customer", "seller", "admin", "super_admin"}
         if role_value not in allowed_roles:
-            raise ValueError(f"Role must be one of: {', '.join(allowed_roles)}")
+            raise ValueError(f"Invalid role: {role_value}. Allowed roles: {', '.join(allowed_roles)}")
         return role_value
 
 class UserLoginRequest(BaseModel):
