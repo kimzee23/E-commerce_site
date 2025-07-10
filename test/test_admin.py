@@ -3,7 +3,7 @@ import json
 from bson import ObjectId
 from flask import current_app
 
-from app import create_app
+from app import mongo
 
 
 def test_if_admin_register_successfully(test_client):
@@ -21,7 +21,7 @@ def test_if_admin_register_successfully(test_client):
 
 def test_if_admin_login_successfully(test_client):
     with test_client.application.app_context():
-        current_app.mongo.db.users.delete_many({"email": "gazar@gmail.com", "role": "admin"})
+      mongo.db.users.delete_many({"email": "gazar@gmail.com", "role": "admin"})
 
     payload = {
         "name": "gazar",

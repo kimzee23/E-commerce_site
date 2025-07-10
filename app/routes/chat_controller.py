@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.services.chat_service import ChatService
 from bson import ObjectId
 
-chat_bp = Blueprint("chat", __name__, url_prefix="/api/chat")
+chat_bp = Blueprint("chat_bp", __name__, url_prefix="/api/chat")
 
 @chat_bp.route("/send", methods=["POST"])
 def send_message():

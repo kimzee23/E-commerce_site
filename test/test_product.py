@@ -1,7 +1,7 @@
 import json
 import pytest
 from bson import ObjectId
-from flask_oauthlib.utils import create_response
+
 
 
 @pytest.fixture

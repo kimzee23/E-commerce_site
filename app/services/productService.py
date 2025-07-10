@@ -1,5 +1,5 @@
 from bson import ObjectId
-from app import mongo
+from app.extentions import mongo
 from app.dtos.request.product_request import CreateProductRequest
 from app.models.product_model import Product
 

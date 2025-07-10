@@ -1,5 +1,6 @@
 from email_validator import validate_email, EmailNotValidError
 import phonenumbers
+from phonenumbers import NumberParseException
 
 
 def validation_for_email(email):
@@ -9,9 +10,14 @@ def validation_for_email(email):
     except EmailNotValidError:
         return False
 
-def validation_for_phoneNumber(phone):
-    try:
-         numbers = phonenumbers.parse(phone, "NG")
-         return phonenumbers.is_valid_number(numbers)
-    except phonenumbers.NumberParseException:
-         return False
+SUPPORTED_REGIONS = ["US", "GB", "NG", "IN", "CN", "JP", "KR", "SG", "MY", "PH", "ID", "PK"]
+
+def validation_for_phoneNumber(phone_number):
+    for region in SUPPORTED_REGIONS:
+        try:
+            parsed_number = phonenumbers.parse(phone_number, region)
+            if phonenumbers.is_valid_number(parsed_number):
+                return True
+        except NumberParseException:
+            continue
+    return False

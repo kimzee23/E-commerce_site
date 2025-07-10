@@ -1,7 +1,7 @@
 from bson import ObjectId
-from app import mongo
-from app.models.chat_model import Chat
 from datetime import datetime, timezone
+from app.extentions import mongo
+from app.models.chat_model import Chat
 
 
 class ChatService:
@@ -14,9 +14,7 @@ class ChatService:
 
     @staticmethod
     def send_message(product_id, buyer_id, seller_id, message, price_offer):
-        db = mongo.db
-
-        chat = db.chats.find_one({
+        chat = mongo.db.chats.find_one({
             "product_id": ObjectId(product_id),
             "buyer_id": ObjectId(buyer_id),
             "seller_id": ObjectId(seller_id)
@@ -34,7 +32,7 @@ class ChatService:
             "timestamp": datetime.now(timezone.utc)
         }
 
-        result = db.chats.update_one(
+        result = mongo.db.chats.update_one(
             {"_id": ObjectId(chat_id)},
             {"$push": {"messages": new_message}}
         )
@@ -46,16 +44,14 @@ class ChatService:
 
     @staticmethod
     def get_chat(chat_id):
-        db = mongo.db
-        chat = db.chats.find_one({"_id": ObjectId(chat_id)})
+        chat = mongo.db.chats.find_one({"_id": ObjectId(chat_id)})
         if not chat:
             raise ValueError("Chat not found")
         return chat
 
     @staticmethod
     def get_chats_for_user(user_id):
-        db = mongo.db
-        chats = db.chats.find({
+        chats = mongo.db.chats.find({
             "$or": [
                 {"buyer_id": ObjectId(user_id)},
                 {"seller_id": ObjectId(user_id)}
@@ -65,8 +61,7 @@ class ChatService:
 
     @staticmethod
     def get_conversation(product_id, buyer_id):
-        db = mongo.db
-        chat = db.chats.find_one({
+        chat = mongo.db.chats.find_one({
             "product_id": ObjectId(product_id),
             "buyer_id": ObjectId(buyer_id)
         })
