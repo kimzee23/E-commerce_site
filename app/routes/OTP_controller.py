@@ -14,3 +14,4 @@ def verify_otp():
         return jsonify({"error": str(ve)}), 404 if str(ve) == "User not found" else 400
     except Exception as e:
         return jsonify({"error": "Unexpected error", "details": str(e)}), 500
+
