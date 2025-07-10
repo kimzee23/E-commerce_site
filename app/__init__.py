@@ -1,5 +1,7 @@
 
 from flask import Flask
+
+from app.routes.OTP_controller import verify_otp, otp_bp
 from config import Config
 from app.extentions import mongo, mail
 
@@ -32,5 +34,6 @@ def create_app(testing=False):
     app.register_blueprint(product_tracker_bp)
     app.register_blueprint(customer_bp)
     app.register_blueprint(chat_bp)
+    app.register_blueprint(otp_bp)
 
     return app
