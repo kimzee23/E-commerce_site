@@ -1,10 +1,8 @@
 import random
-
-from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.enums.user_role import UserRole
 from app.models.user_model import User
-from app import mongo
+from app.extentions import mongo
 
 class UserService:
     @staticmethod
@@ -26,8 +24,8 @@ class UserService:
             raise ValueError(f"{role.capitalize()} phone already registered")
 
         hashed_password = generate_password_hash(password)
-
         otp = str(random.randint(100000, 999999))
+
         user = User(
             name=name,
             email=email,
@@ -39,8 +37,6 @@ class UserService:
         )
 
         result = mongo.db.users.insert_one(user.to_dict())
-
-
         return str(result.inserted_id), otp
 
     @staticmethod

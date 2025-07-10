@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from bson import ObjectId
-from app import mongo
+from app.extentions import mongo
 
 
 class ProductTrackerService:

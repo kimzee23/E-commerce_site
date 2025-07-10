@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify
 from pydantic import ValidationError
 from app.dtos.request.product_request import CreateProductRequest
 from app.dtos.response.ProductResponse import ProductResponse
-from app.models.product_model import Product
 from app.services.productService import ProductService
 
 product_bp = Blueprint("product_bp", __name__, url_prefix="/api/products")

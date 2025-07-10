@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify
-from app.dtos.response.ProductTrackerResponse import ProductTrackerResponse
 from app.services.Tracker_service import ProductTrackerService
 
 product_tracker_bp = Blueprint("product_tracker_bp", __name__, url_prefix="/api/product-tracker")

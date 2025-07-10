@@ -2,8 +2,7 @@ import json
 from flask import Blueprint, request, jsonify
 from flask_mail import Message
 from pydantic import ValidationError
-
-from app import mail
+from app.extentions import mail
 from app.dtos.request.user_request import UserRegisterRequest
 from app.enums.user_role import UserRole
 from app.services.userService import UserService

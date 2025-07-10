@@ -1,7 +1,5 @@
 from flask import request, jsonify, Blueprint
-from bson import ObjectId
-from app.services.userService import UserService
-from app import mongo
+from app.extentions import mongo
 
 otp_bp = Blueprint("otp", __name__, url_prefix="/api/otp")
 
