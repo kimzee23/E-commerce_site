@@ -1,55 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Verify Your Account</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/otp.css') }}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="{{ url_for("static",filename="css/otp.css") }}">
 </head>
 <body>
-  <div class="otp-container">
-    <h2>Verify Your Account</h2>
-    <p>Enter the OTP sent to your email:</p>
+<div class="otp-container">
+    <div class="otp-box">
+        <div class="logo">🔵</div>
+        <h2>Password Reset</h2>
+        <p>We sent a code to <strong></strong></p>
+        <form id="otpForm">
+            <div class="otp-inputs">
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+                <input type="text" maxlength="1" required>
+            </div>
+            <input type="hidden" id="email" value="youremail@example.com" />
+            <p class="resend-text">
+                Didn't receive OTP code? <a href="#" id="resendLink">Resend OTP</a>
+            </p>
+            <div id="messageBox" class="message"></div>
+            <button type="submit">Verify & Continue</button>
+        </form>
+    </div>
+</div>
 
-    <form id="otpForm">
-      <input type="email" id="email" placeholder="Enter your email" required />
-      <select id="role" required>
-        <option value="">Select Role</option>
-        <option value="buyer">Buyer</option>
-        <option value="seller">Seller</option>
-      </select>
-      <input type="text" id="otp" placeholder="Enter OTP" required />
-      <button type="submit">Verify</button>
-    </form>
-
-    <div id="messageBox"></div>
-  </div>
-
-  <script>
-    document.getElementById('otpForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-
-      const email = document.getElementById('email').value;
-      const role = document.getElementById('role').value;
-      const otp = document.getElementById('otp').value;
-
-      const response = await fetch('/api/users/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp, role })
-      });
-
-      const result = await response.json();
-      const msgBox = document.getElementById('messageBox');
-
-      if (response.ok) {
-        msgBox.textContent = result.message;
-        msgBox.style.color = 'green';
-        // You can also redirect: window.location.href = '/login';
-      } else {
-        msgBox.textContent = result.error;
-        msgBox.style.color = 'red';
-      }
-    });
-  </script>
+<script src="{{ url_for("static",filename="js/opt.js") }}"></script>
 </body>
 </html>

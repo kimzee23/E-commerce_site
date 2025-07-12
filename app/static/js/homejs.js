@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setCarouselBackgrounds();
 });
 
-// Handle login/register with real backend API and toasts
 window.handleAuth = async function(action, userTypeParam) {
   const emailInput = document.getElementById(`${action}Email`);
   const passwordInput = document.getElementById(`${action}Password`);
@@ -35,6 +34,7 @@ window.handleAuth = async function(action, userTypeParam) {
   const password = passwordInput?.value.trim();
   const name = nameInput?.value.trim() || '';
   const phone = phoneInput?.value.trim() || '';
+  const role = userTypeParam;  // ✅ explicitly include role
 
   if (!email || !password || (action === 'register' && (!name || !phone))) {
     showToast('Error', 'Please fill in all required fields.', 'error');
@@ -44,11 +44,15 @@ window.handleAuth = async function(action, userTypeParam) {
   const endpoint = userTypeParam === 'seller' ? '/api/sellers' : '/api/customers';
   const url = action === 'register' ? `${endpoint}/register` : `${endpoint}/login`;
 
+  const payload = { email, password, name, phone, role };  // ✅ correct payload
+
+  console.log("🔍 Sending payload:", payload);  // ✅ debug log
+
   try {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name, phone })
+      body: JSON.stringify(payload)
     });
 
     const data = await res.json();

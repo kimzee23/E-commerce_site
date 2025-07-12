@@ -1,5 +1,7 @@
 import sys
 import os
+
+import pymongo
 import pytest
 from flask import current_app
 
@@ -17,6 +19,11 @@ def test_client():
         with app.app_context():
             mongo.cx.drop_database("ecommerce_test")
         yield client
+    # try:
+    #     mongo.cx.drop_database("ecommerce_test")
+    # except pymongo.errors.ServerSelectionTimeoutError as e:
+    #     pytest.exit(f"❌ MongoDB connection error: {e}")
+
 
 @pytest.fixture(autouse=True)
 def clear_users_collection(test_client):

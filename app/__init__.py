@@ -22,6 +22,9 @@ def create_app(testing=False):
     @app.route('/')
     def home():
         return render_template("home_page.html")
+    @app.route('/')
+    def seller_dashboard():
+        render_template("seller_dashboard.html")
 
     @app.route('/debug/users')
     def debug_users():

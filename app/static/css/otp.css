@@ -1,87 +1,59 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f5f5;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  color: #333;
+    background: url('/static/img/otp.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .otp-container {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.otp-container h2 {
-  margin-top: 0;
-  color: #502c2c;
-  font-size: 1.8rem;
+.logo {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
 }
 
-.otp-container p {
-  margin-bottom: 1.5rem;
-  color: #7f8c8d;
+.otp-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
 }
 
-/* Form Styles */
-#otpForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.otp-inputs input {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
-#otpForm input,
-#otpForm select {
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
+button {
+    background-color: #c53030;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
 }
 
-#otpForm input:focus,
-#otpForm select:focus {
-  outline: none;
-  border-color:  #e53e3e;
-  box-shadow: 0 0 0 2px rgba(112, 45, 52, 0.2);
+.resend-text {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
 }
 
-#otpForm button {
-  background-color: #904141;
-  color: white;
-  border: none;
-  padding: 0.8rem;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-#otpForm button:hover {
-  background-color:  #e53e3e;
-}
-
-/* Message Box Styles */
-#messageBox {
-  margin-top: 1.5rem;
-  padding: 0.8rem;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  display: none;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 480px) {
-  .otp-container {
-    padding: 1.5rem;
-    margin: 0 1rem;
-  }
+.message {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
 }
