@@ -5,14 +5,12 @@ let userType = localStorage.getItem('role');
 let cartCount = 0;
 let wishlistCount = 0;
 let flashSaleTimer = null;
-
-// On load, check for user role and redirect accordingly
 document.addEventListener('DOMContentLoaded', () => {
   const role = localStorage.getItem('role');
   const token = localStorage.getItem('token');
 
   if (role === 'seller') {
-    window.location.href = '/seller/dashboard';
+    window.location.href = 'api/sellers/dashboard';
     return;
   }
 
@@ -34,7 +32,7 @@ window.handleAuth = async function(action, userTypeParam) {
   const password = passwordInput?.value.trim();
   const name = nameInput?.value.trim() || '';
   const phone = phoneInput?.value.trim() || '';
-  const role = userTypeParam;  // ✅ explicitly include role
+  const role = userTypeParam;
 
   if (!email || !password || (action === 'register' && (!name || !phone))) {
     showToast('Error', 'Please fill in all required fields.', 'error');
@@ -44,10 +42,8 @@ window.handleAuth = async function(action, userTypeParam) {
   const endpoint = userTypeParam === 'seller' ? '/api/sellers' : '/api/customers';
   const url = action === 'register' ? `${endpoint}/register` : `${endpoint}/login`;
 
-  const payload = { email, password, name, phone, role };  // ✅ correct payload
-
-  console.log("🔍 Sending payload:", payload);  // ✅ debug log
-
+  const payload = { email, password, name, phone, role };
+  // console.log(" Sending payload:", payload);
   try {
     const res = await fetch(url, {
       method: 'POST',
@@ -84,7 +80,7 @@ window.handleAuth = async function(action, userTypeParam) {
     );
 
     setTimeout(() => {
-      window.location.href = userTypeParam === 'seller' ? '/seller/dashboard' : '/dashboard';
+      window.location.href = userTypeParam === 'sellers' ? 'api/sellers/dashboard' : 'api/sellers/dashboard';
     }, 1500);
 
   } catch (err) {

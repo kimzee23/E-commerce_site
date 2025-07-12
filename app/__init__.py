@@ -1,6 +1,8 @@
 
 from flask import Flask, render_template, jsonify
 from app.routes.OTP_controller import verify_otp, otp_bp
+from app.routes.cart_controller import cart_bp
+from app.utils.exception import APIException
 from config import Config
 from app.extentions import mongo, mail
 
@@ -8,7 +10,7 @@ from app.extentions import mongo, mail
 def create_app(testing=False):
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.render_template = "templates"
+
 
     if testing:
         app.config["MONGO_URI"] = "mongodb://localhost:27017/ecommerce_test"
@@ -22,9 +24,8 @@ def create_app(testing=False):
     @app.route('/')
     def home():
         return render_template("home_page.html")
-    @app.route('/')
-    def seller_dashboard():
-        render_template("seller_dashboard.html")
+
+
 
     @app.route('/debug/users')
     def debug_users():
@@ -49,5 +50,20 @@ def create_app(testing=False):
     app.register_blueprint(customer_bp)
     app.register_blueprint(chat_bp)
     app.register_blueprint(otp_bp)
+    app.register_blueprint(cart_bp)
+
+    @app.errorhandler(APIException)
+    def handle_api_exception(error):
+        response = jsonify(error.to_dict())
+        response.status_code = error.status_code
+        return response
+
+    @app.errorhandler(404)
+    def handle_not_found(e):
+        return jsonify(message="Resource not found"), 404
+
+    @app.errorhandler(500)
+    def handle_server_error(e):
+        return jsonify(message="Internal server error"), 500
 
     return app

@@ -1,0 +1,7 @@
+flask==2.3.2
+flask-pymongo==2.3.0
+pymongo==4.4.1
+python-dotenv==1.0.0
+dnspython==2.4.2
+marshmallow==3.19.0  # For advanced validation if needed
+bleach==6.0.0        # For input sanitization

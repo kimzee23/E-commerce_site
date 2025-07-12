@@ -1,5 +1,5 @@
 body {
-    background: url('/static/img/otp.jpg') no-repeat center center fixed;
+    background: url("{{ url_for('static', filename='css/otp.jpg') }}") no-repeat center center fixed;
     background-size: cover;
     font-family: 'Segoe UI', sans-serif;
     display: flex;

@@ -1,5 +1,5 @@
 import json
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from flask_mail import Message
 from pydantic import ValidationError
 from app.extentions import mail, mongo
@@ -76,3 +76,6 @@ def login_seller():
     except Exception as error:
         return jsonify({"error": "Unexpected error", "details": str(error)}), 500
 
+@seller_bp.route('/dashboard')
+def seller_dashboard():
+    return render_template('seller_dashboard.html')

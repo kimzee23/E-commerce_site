@@ -20,30 +20,26 @@ class UserService:
         print(f" - Role: {role}")
         print(f" - Phone: {phone}")
 
-        # Basic validations
+
         if not name or not password:
             raise ValueError("Name and password cannot be empty or spaces only")
 
-        # Ensure role is string value
         if isinstance(role, UserRole):
             role = role.value
 
-        # Check for existing user with same email and role
         print("Checking for existing email+role match...")
         existing_email_user = mongo.db.users.find_one({'email': email, 'role': role})
-        print("   Found by email+role:", existing_email_user)
+
 
         if existing_email_user and "_id" in existing_email_user:
             raise ValueError(f"{role.capitalize()} email already registered")
 
-        # Optional: Check for duplicate phone for same role
         if phone:
             print("Checking for existing phone+role match...")
             existing_phone_user = mongo.db.users.find_one({'phone': phone, 'role': role})
-            print("   ➤ Found by phone+role:", existing_phone_user)
+
 
             if existing_phone_user and "_id" in existing_phone_user:
-                print("⚠️ Duplicate phone+role detected!")
                 raise ValueError(f"{role.capitalize()} phone already registered")
 
         # All good — hash password & generate OTP
