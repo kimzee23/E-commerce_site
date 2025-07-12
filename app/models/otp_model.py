@@ -7,7 +7,7 @@ class OTP:
         self.user_id = ObjectId(user_id)
         self.otp_code = otp_code
         self.created_at = created_at or datetime.now(timezone.utc)
-        self.expires_at = expires_at or (self.created_at + timedelta(minutes=10))
+        self.expires_at = expires_at or (self.created_at + timedelta(seconds=90))
 
     def to_dict(self):
         return {

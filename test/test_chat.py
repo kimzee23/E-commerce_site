@@ -20,7 +20,7 @@ def test_get_conversation_success(test_client):
     buyer_id = str(ObjectId())
     seller_id = str(ObjectId())
 
-    # Step 1: Send a message to create a chat
+
     payload = {
         "product_id": product_id,
         "buyer_id": buyer_id,
@@ -32,7 +32,7 @@ def test_get_conversation_success(test_client):
     send_response = test_client.post("/api/chat/send", data=json.dumps(payload), content_type='application/json')
     assert send_response.status_code == 201
 
-    # Step 2: Get the conversation
+
     get_response = test_client.get(f"/api/chat/conversation/{product_id}/{buyer_id}")
     assert get_response.status_code == 200
     data = get_response.get_json()

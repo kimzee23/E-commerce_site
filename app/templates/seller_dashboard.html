@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seller Dashboard - Upload Product</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for ("static",filename="css/seller.css") }}" />
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="dashboard-header">
+    <div class="logo">MyShop <span class="seller-tag">Seller</span></div>
+    <nav class="nav-links">
+      <a href="/seller/dashboard">Dashboard</a>
+      <a href="{{ url_for("static", filename="templates/home.html") }}" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <section class="dashboard-container">
+    <h2>Upload New Product</h2>
+    <form id="productForm" class="product-form">
+      <div class="form-group">
+        <label for="name">Product Name</label>
+        <input type="text" name="name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea name="description" rows="4" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price ($)</label>
+        <input type="number" name="price" step="0.01" required />
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input type="text" name="category" required />
+      </div>
+
+      <div class="form-group">
+        <label for="stock_quantity">Stock Quantity</label>
+        <input type="number" name="stock_quantity" required />
+      </div>
+
+      <div class="form-group">
+        <label for="images_url">Image URLs (at least one)</label>
+        <input type="text" name="images_url" placeholder="https://..." required />
+        <input type="text" name="images_url" placeholder="Optional image URL" />
+        <input type="text" name="images_url" placeholder="Optional image URL" />
+      </div>
+
+      <button type="button" onclick="submitProduct()">Submit Product</button>
+    </form>
+  </section>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <i class="toast-icon fas fa-info-circle"></i>
+    <div class="toast-content">
+      <span class="toast-title">Notice</span>
+      <span class="toast-message">Message goes here...</span>
+    </div>
+  </div>
+
+  <script src="{{ url_for ("static",filename="js/seller_dashboard.js") }}"></script>
+</body>
+</html>

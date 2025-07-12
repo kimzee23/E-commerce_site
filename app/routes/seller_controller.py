@@ -12,7 +12,9 @@ seller_bp = Blueprint('sellers', __name__, url_prefix='/api/sellers')
 
 @seller_bp.route('/register', methods=['POST'])
 def register_seller():
+    print("⚡ Seller register route triggered")
     data = request.get_json()
+    print("📥 Raw request data:", data)
     try:
         user_data = UserRegisterRequest(**data)
 
@@ -30,6 +32,7 @@ def register_seller():
             phone=user_data.phone,
             role=UserRole.SELLER.value
         )
+
 
         msg = Message(
             subject="Verify Your Seller Account on GazarTech",
