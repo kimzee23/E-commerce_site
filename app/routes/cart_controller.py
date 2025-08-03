@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.cart_service import CartService
-from app.utils.exceptions import CartNotFound, ProductNotFound
-from app.utils.validators import validate_object_id
+# from app.utils.exception import CartNotFound, ProductNotFound
+from app.utils.validator import validate_object_id
 
 cart_bp = Blueprint('cart', __name__, url_prefix='/api/carts')
 

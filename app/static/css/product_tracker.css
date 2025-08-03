@@ -1,0 +1,27 @@
+
+.conversion-high {
+    color: #10B981;
+}
+
+.conversion-medium {
+    color: #F59E0B;
+}
+
+.conversion-low {
+    color: #EF4444;
+}
+
+/* Smooth transitions for interactive elements */
+button, select, input {
+    transition: all 0.2s ease-in-out;
+}
+
+#productTableBody tr:hover {
+    background-color: #F9FAFB;
+}
+
+@media (max-width: 640px) {
+    .chart-container {
+        height: 250px !important;
+    }
+}

@@ -3,13 +3,16 @@ from flask import Flask, render_template, jsonify
 from app.routes.OTP_controller import verify_otp, otp_bp
 from app.routes.cart_controller import cart_bp
 from app.utils.exception import APIException
-from config import Config
+from config_email import Config_email, ConfigCart
 from app.extentions import mongo, mail
 
 
 def create_app(testing=False):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(Config_email)
+
+    app.config.from_object(ConfigCart)
+
 
 
     if testing:
@@ -24,6 +27,10 @@ def create_app(testing=False):
     @app.route('/')
     def home():
         return render_template("home_page.html")
+
+    @app.route('/verify-otp')
+    def otp_page():
+        return render_template('verify_otp.html')
 
 
 
